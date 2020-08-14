@@ -22,9 +22,8 @@ public class MinesweeperApplication {
         String[][] playerBoard = resizeBoard(difficulty); //Board which is used by user to make moves and "open" cells
         String[][] mineMaskBoard = resizeBoard(difficulty); //Board which keeps where the mines are
 
-        //Filling the boards with empty cells ("-")
-        fillBoard(playerBoard);
-        fillBoard(mineMaskBoard);
+        clearBoard(playerBoard);
+        clearBoard(mineMaskBoard);
 
         boolean passedFirstMove = false; //Making sure that the fist move of the user is not a Mine
         while (true) { //Makes moves until Mine or Win
@@ -36,8 +35,14 @@ public class MinesweeperApplication {
 
             System.out.print("Enter your move: {row} {col} -> ");
             String[] moveOnCell = sc.nextLine().split(" ");
-            int row = Integer.parseInt(moveOnCell[0]);
-            int col = Integer.parseInt(moveOnCell[1]);
+            int row, col;
+            try {
+                row = Integer.parseInt(moveOnCell[0]);
+                col = Integer.parseInt(moveOnCell[1]);
+            } catch (NumberFormatException ex){
+                System.out.printf("\nThe row and col should be between 0 and %d!\n", playerBoard.length - 1);
+                continue;
+            }
 
             if (!isInBoard(row, col, mineMaskBoard)) {
                 System.out.printf("\nThe row and col should be between 0 and %d!\n", playerBoard.length - 1);
@@ -161,8 +166,7 @@ public class MinesweeperApplication {
         try {
             return board[row][col].equals("*");
         } catch (Exception ex) {
-
-            System.out.println("Exeption: " + ex + "\nrow: " + row + " col: " + col);
+            System.out.println("Exception: " + ex + "\nrow: " + row + " col: " + col);
             return false;
         }
     }
@@ -210,7 +214,7 @@ public class MinesweeperApplication {
         return board;
     }
 
-    private static void fillBoard(String[][] board) {
+    private static void clearBoard(String[][] board) {
         for (String[] strings : board) {
             Arrays.fill(strings, "-");
         }
